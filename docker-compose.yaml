@@ -1,0 +1,22 @@
+services:
+  tele:
+    build: .
+    network_mode: bridge
+    cap_add:
+      - sys_ptrace
+      - net_admin
+      - net_raw
+    ports:
+      - "5060:5060/udp"                     # SIP UDP port
+      - "5060:5060"                         # SIP TCP port
+      - "5061:5061"                         # SIP TLS port
+      - "10000-10099:10000-10099/udp"       # RTP ports
+    environment:
+      - SYSLOG_LEVEL=${SYSLOG_LEVEL-4}      # Logging
+      - HOSTNAME=tele
+    volumes:
+      - ./asterisk:/srv/etc/asterisk
+      - tele-conf:/srv                      # Persistent storage
+
+volumes:
+  tele-conf:                                # Persistent storage
